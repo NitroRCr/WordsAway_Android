@@ -1,0 +1,16 @@
+<resources>
+    <string name="app_name">WordsAway</string>
+
+    <string name="textView_input_title">输入文本</string>
+    <string name="checkbox_missUrl">兼容链接</string>
+    <string name="checkbox_coolapkMode">兼容 [表情] #话题# 和 @</string>
+    <string name="checkbox_zeroWidthSpace">零宽间隔（普通）</string>
+    <string name="checkbox_rowsReverse">每行双重反转（增强）</string>
+    <string name="checkbox_wordsReverse">每两字双重反转（增强）</string>
+    <string name="checkbox_verticalText">转为竖向排列（物理）</string>
+    <string name="checkbox_lettersFont">替换英文和数字</string>
+    <string name="button_processText">处理</string>
+    <string name="textView_result_title">处理结果：</string>
+    <string name="textView_result_default">请先处理</string>
+    <string name="button_copyResult">复制</string>
+</resources>
