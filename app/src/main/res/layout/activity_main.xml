@@ -7,79 +7,6 @@
     android:layout_height="match_parent"
     android:paddingTop="?attr/actionBarSize">
 
-    <CheckBox
-        android:id="@+id/checkBox_missUrl"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:checked="true"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_missUrl"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine" />
-
-    <CheckBox
-        android:id="@+id/checkBox_coolapkMode"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:checked="true"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_coolapkMode"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_missUrl" />
-
-    <CheckBox
-        android:id="@+id/checkBox_zeroWidthSpace"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:checked="true"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_zeroWidthSpace"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_coolapkMode" />
-
-    <CheckBox
-        android:id="@+id/checkBox_wordsReverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_wordsReverse"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_zeroWidthSpace" />
-
-    <CheckBox
-        android:id="@+id/checkBox_rowsReverse"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_rowsReverse"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_wordsReverse" />
-
-    <CheckBox
-        android:id="@+id/checkBox_verticalText"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_verticalText"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_rowsReverse" />
-
-    <CheckBox
-        android:id="@+id/checkBox_lettersFont"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:onClick="onCheckBoxClick"
-        android:text="@string/checkbox_lettersFont"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_verticalText" />
-
     <Button
         android:id="@+id/button"
         android:layout_width="wrap_content"
@@ -101,7 +28,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox_lettersFont" />
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout" />
 
     <TextView
         android:id="@+id/textView_result"
@@ -148,4 +75,67 @@
         android:text="@string/button_copyResult"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView_result" />
+
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:orientation="vertical"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/editTextTextMultiLine">
+
+        <CheckBox
+            android:id="@+id/checkBox_missUrl"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_missUrl" />
+
+        <CheckBox
+            android:id="@+id/checkBox_coolapkMode"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_coolapkMode" />
+
+        <CheckBox
+            android:id="@+id/checkBox_zeroWidthSpace"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:checked="true"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_zeroWidthSpace" />
+
+        <CheckBox
+            android:id="@+id/checkBox_wordsReverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_wordsReverse" />
+
+        <CheckBox
+            android:id="@+id/checkBox_rowsReverse"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_rowsReverse" />
+
+        <CheckBox
+            android:id="@+id/checkBox_verticalText"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_verticalText" />
+
+        <CheckBox
+            android:id="@+id/checkBox_lettersFont"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:onClick="onCheckBoxClick"
+            android:text="@string/checkbox_lettersFont" />
+
+    </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -81,7 +81,24 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void onCheckBoxClick(View view) {
-
+        boolean isChecked = ((CheckBox)view).isChecked();
+        switch (view.getId()) {
+            case R.id.checkBox_wordsReverse:
+                if (isChecked) {
+                    checkBox_rowsReverse.setChecked(false);
+                    checkBox_zeroWidthSpace.setChecked(false);
+                }
+                break;
+            case R.id.checkBox_rowsReverse:
+                if (isChecked) {
+                    checkBox_wordsReverse.setChecked(false);
+                }
+                break;
+            case R.id.checkBox_zeroWidthSpace:
+                if (isChecked) {
+                    checkBox_wordsReverse.setChecked(false);
+                }
+        }
     }
 
     public void copyResult(View view) {
