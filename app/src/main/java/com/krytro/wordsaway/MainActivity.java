@@ -5,8 +5,11 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.view.View;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -17,6 +20,8 @@ public class MainActivity extends AppCompatActivity {
     WordsAway wa = new WordsAway();
 
     private EditText editText_input;
+    private EditText editText_maxCol;
+    private EditText editText_minRow;
     private CheckBox checkBox_missUrl;
     private CheckBox checkBox_coolapkMode;
     private CheckBox checkBox_zeroWidthSpace;
@@ -25,10 +30,18 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox_verticalText;
     private CheckBox checkBox_lettersFont;
     private TextView textView_result;
+    private Spinner spinner_fonts;
+
+    LinearLayout linearLayout_verticalText_options;
+    LinearLayout linearLayout_fontSelect;
 
     private ClipboardManager cm;
 
     private String latestResult;
+
+    private String[] fontNames = {"monospace", "script", "double-struck", "sans-serif",
+            "sans-serif-bold", "sans-serif-italic", "sans-serif-bold-italic", "bold", "italic",
+            "bold-italic", "bold-script", "fake-normal"};
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         editText_input = findViewById(R.id.editTextTextMultiLine);
+        editText_maxCol = findViewById(R.id.editTextNumber_maxCol);
+        editText_minRow = findViewById(R.id.editTextNumber_minRow);
         checkBox_missUrl = findViewById(R.id.checkBox_missUrl);
         checkBox_coolapkMode = findViewById(R.id.checkBox_coolapkMode);
         checkBox_zeroWidthSpace = findViewById(R.id.checkBox_zeroWidthSpace);
@@ -45,7 +60,16 @@ public class MainActivity extends AppCompatActivity {
         checkBox_lettersFont = findViewById(R.id.checkBox_lettersFont);
         textView_result = findViewById(R.id.textView_result);
 
+        linearLayout_verticalText_options = findViewById(R.id.linearLayout_verticalText_options);
+        linearLayout_fontSelect = findViewById(R.id.linearLayout_fontSelect);
+
         cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+
+        spinner_fonts = findViewById(R.id.spinner_font);
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
+                R.array.fonts_array, android.R.layout.simple_spinner_item);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinner_fonts.setAdapter(adapter);
     }
 
     public void processText(View view) {
@@ -70,10 +94,13 @@ public class MainActivity extends AppCompatActivity {
             text = wa.mixin(text, "\u200b", true);
         }
         if (checkBox_verticalText.isChecked()) {
-            text = wa.verticalText(text);
+            int maxCol = Integer.valueOf(editText_maxCol.getText().toString());
+            int minRow = Integer.valueOf(editText_minRow.getText().toString());
+            text = wa.verticalText(text, maxCol, minRow);
         }
+        spinner_fonts.getSelectedItemId();
         if (checkBox_lettersFont.isChecked()) {
-            text = wa.font(text, "bold");
+            text = wa.font(text, fontNames[spinner_fonts.getSelectedItemPosition()]);
         }
         text = text.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
         textView_result.setText(text);
@@ -98,6 +125,21 @@ public class MainActivity extends AppCompatActivity {
                 if (isChecked) {
                     checkBox_wordsReverse.setChecked(false);
                 }
+                break;
+            case R.id.checkBox_verticalText:
+                if (isChecked) {
+                    linearLayout_verticalText_options.setVisibility(View.VISIBLE);
+                } else {
+                    linearLayout_verticalText_options.setVisibility(View.GONE);
+                }
+                break;
+            case R.id.checkBox_lettersFont:
+                if (isChecked) {
+                    linearLayout_fontSelect.setVisibility(View.VISIBLE);
+                } else {
+                    linearLayout_fontSelect.setVisibility(View.GONE);
+                }
+                break;
         }
     }
 

@@ -50,6 +50,10 @@ public class WordsAway {
         }});
     }};
 
+    public static final String[] fontNames = {"bold", "italic", "monospace", "script", "bold-italic",
+            "bold-script", "double-struck", "sans-serif", "sans-serif-bold", "sans-serif-italic",
+            "sans-serif-bold-italic", "reverse", "fake-normal"};
+
     public WordsAway() {
 
     }

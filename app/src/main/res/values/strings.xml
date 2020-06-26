@@ -1,7 +1,12 @@
 <resources>
     <string name="app_name">WordsAway</string>
 
-    <string name="textView_input_title">输入文本</string>
+    <string name="textView_input_label">输入文本</string>
+    <string name="textView_maxCol_label">最大列数</string>
+    <string name="maxCol_default">12</string>
+    <string name="minRow_default">5</string>
+    <string name="textView_minRow_label">最小行数</string>
+    <string name="textView_spinner_font_label">替换字体</string>
     <string name="checkbox_missUrl">兼容链接</string>
     <string name="checkbox_coolapkMode">兼容 [表情] #话题# 和 @</string>
     <string name="checkbox_zeroWidthSpace">零宽间隔（普通）</string>
@@ -13,4 +18,19 @@
     <string name="textView_result_title">处理结果：</string>
     <string name="textView_result_default">请先处理</string>
     <string name="button_copyResult">复制</string>
+
+    <string-array name="fonts_array">
+        <item>𝚖𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎</item>
+        <item>𝓈𝒸𝓇𝒾𝓅𝓉</item>
+        <item>𝕕𝕠𝕦𝕓𝕝𝕖-𝕤𝕥𝕣𝕦𝕔𝕜</item>
+        <item>𝗌𝖺𝗇𝗌-𝗌𝖾𝗋𝗂𝖿</item>
+        <item>𝘀𝗮𝗻𝘀-𝘀𝗲𝗿𝗶𝗳-𝗯𝗼𝗹𝗱</item>
+        <item>𝘴𝘢𝘯𝘴-𝘴𝘦𝘳𝘪𝘧-𝘪𝘵𝘢𝘭𝘪𝘤</item>
+        <item>𝙨𝙖𝙣𝙨-𝙨𝙚𝙧𝙞𝙛-𝙗𝙤𝙡𝙙-𝙞𝙩𝙖𝙡𝙞𝙘</item>
+        <item>𝐛𝐨𝐥𝐝</item>
+        <item>𝑖𝑡𝑎𝑙𝑖𝑐</item>
+        <item>𝒃𝒐𝒍𝒅-𝒊𝒕𝒂𝒍𝒊𝒄</item>
+        <item>𝓫𝓸𝓵𝓭-𝓼𝓬𝓻𝓲𝓹𝓽</item>
+        <item>fаkе-ոоrmаӏ</item>
+    </string-array>
 </resources>
