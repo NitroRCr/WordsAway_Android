@@ -4,6 +4,7 @@ import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
+import android.service.autofill.RegexValidator;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -14,6 +15,9 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -94,8 +98,12 @@ public class MainActivity extends AppCompatActivity {
             text = wa.mixin(text, "\u200b", true);
         }
         if (checkBox_verticalText.isChecked()) {
-            int maxCol = Integer.valueOf(editText_maxCol.getText().toString());
-            int minRow = Integer.valueOf(editText_minRow.getText().toString());
+            int maxCol = Integer.parseInt(editText_maxCol.getText().toString());
+            int minRow = Integer.parseInt(editText_minRow.getText().toString());
+            if (maxCol == 0) {
+                toast("最大列数不能为0");
+                return;
+            }
             text = wa.verticalText(text, maxCol, minRow);
         }
         spinner_fonts.getSelectedItemId();
@@ -146,8 +154,12 @@ public class MainActivity extends AppCompatActivity {
     public void copyResult(View view) {
         ClipData data = ClipData.newPlainText("Result", latestResult);
         cm.setPrimaryClip(data);
+        toast("已复制");
+    }
+
+    public void toast(String content) {
         Context context = getApplicationContext();
-        Toast toast = Toast.makeText(context, "已复制", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(context, content, Toast.LENGTH_SHORT);
         toast.show();
     }
 }
