@@ -175,6 +175,17 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.menu_item_usage:
+
+                break;
+            case R.id.menu_item_website:
+
+                break;
+            case R.id.menu_item_about:
+
+                break;
+        }
         return true;
     }
 }
