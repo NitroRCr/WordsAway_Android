@@ -5,6 +5,9 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.os.Bundle;
 import android.service.autofill.RegexValidator;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
@@ -15,9 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
-
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -46,6 +46,8 @@ public class MainActivity extends AppCompatActivity {
     private String[] fontNames = {"monospace", "script", "double-struck", "sans-serif",
             "sans-serif-bold", "sans-serif-italic", "sans-serif-bold-italic", "bold", "italic",
             "bold-italic", "bold-script", "fake-normal"};
+
+    private Menu main_menu;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -161,5 +163,18 @@ public class MainActivity extends AppCompatActivity {
         Context context = getApplicationContext();
         Toast toast = Toast.makeText(context, content, Toast.LENGTH_SHORT);
         toast.show();
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.main_menu, menu);
+        main_menu = menu;
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        return true;
     }
 }

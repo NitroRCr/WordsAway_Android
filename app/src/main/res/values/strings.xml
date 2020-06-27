@@ -33,4 +33,8 @@
         <item>𝓫𝓸𝓵𝓭-𝓼𝓬𝓻𝓲𝓹𝓽</item>
         <item>fаkе-ոоrmаӏ</item>
     </string-array>
+
+    <string name="menu_item_usage">使用说明</string>
+    <string name="menu_item_website">网页版</string>
+    <string name="menu_item_about">关于</string>
 </resources>

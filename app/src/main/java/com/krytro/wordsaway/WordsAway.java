@@ -254,6 +254,6 @@ public class WordsAway {
         return text;
     }
     public String font(String text, String to) {
-        return font(text, "normal", to, false);
+        return font(text, "normal", to, true);
     }
 }
