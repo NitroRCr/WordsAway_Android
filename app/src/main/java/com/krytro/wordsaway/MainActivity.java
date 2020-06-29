@@ -3,8 +3,14 @@ package com.krytro.wordsaway;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
+import android.content.DialogInterface;
+import android.graphics.Color;
+import android.icu.lang.UCharacter;
 import android.os.Bundle;
 import android.service.autofill.RegexValidator;
+import android.text.Html;
+import android.text.method.LinkMovementMethod;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -17,6 +23,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
 
@@ -177,7 +184,7 @@ public class MainActivity extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
             case R.id.menu_item_usage:
-
+                showUsageDialog();
                 break;
             case R.id.menu_item_website:
 
@@ -187,5 +194,19 @@ public class MainActivity extends AppCompatActivity {
                 break;
         }
         return true;
+    }
+
+    private void showUsageDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(this);
+        builder.setTitle(R.string.usage_title);
+        TextView tv = new TextView(this);
+        tv.setText(Html.fromHtml(getText(R.string.usage_content).toString()));
+        tv.setTextColor(Color.parseColor("#222222"));
+        tv.setPadding(30, 40, 30, 20);
+        tv.setMovementMethod(LinkMovementMethod.getInstance());
+        tv.setVerticalScrollBarEnabled(true);
+        builder.setView(tv);
+        builder.setPositiveButton(R.string.usage_btn_confirm, (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.create().show();
     }
 }
