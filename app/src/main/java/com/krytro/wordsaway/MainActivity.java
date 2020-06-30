@@ -199,13 +199,7 @@ public class MainActivity extends AppCompatActivity {
     private void showUsageDialog() {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.usage_title);
-        TextView tv = new TextView(this);
-        tv.setText(Html.fromHtml(getText(R.string.usage_content).toString()));
-        tv.setTextColor(Color.parseColor("#222222"));
-        tv.setPadding(30, 40, 30, 20);
-        tv.setMovementMethod(LinkMovementMethod.getInstance());
-        tv.setVerticalScrollBarEnabled(true);
-        builder.setView(tv);
+        builder.setMessage(Html.fromHtml(getString(R.string.usage_content)));
         builder.setPositiveButton(R.string.usage_btn_confirm, (dialogInterface, i) -> dialogInterface.dismiss());
         builder.create().show();
     }
