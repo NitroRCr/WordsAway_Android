@@ -25,47 +25,47 @@
     <string name="menu_item_about">关于</string>
     <string name="usage_title">使用说明</string>
 
-    <string name="usage_content">
-        &lt;h3&gt;零宽间隔模式&lt;/h3&gt;
-        &lt;p&gt;
-            可视为普通模式，会在每两个字符之间插♂入一个 零宽间隔符 (U+200B)&lt;br/&gt;
-            处理之后文本看上去没有变化，实际上每个字都被间隔开了，可以避开一般的关键词检测&lt;br/&gt;
-        &lt;/p&gt;
-        &lt;h3&gt;每行双重反转&lt;/h3&gt;
-        &lt;p&gt;
-            可视为一种增强模式，会将每行文字反转，然后在每行开头加上一个 强制从右至左符 (U+202E）可以避开更多的关键词检测&lt;i class=&quot;c-coshuaji&quot;&gt;&lt;/i&gt;&lt;br/&gt;
-            缺陷是当一行文本（即不含换行符）以多行形式显示时，这几行的显示顺序会混乱&lt;br/&gt;
-        &lt;/p&gt;
-        &lt;h3&gt;每两字双重反转&lt;/h3&gt;
-        &lt;p&gt;
+    <string name="usage_content"><![CDATA[
+        <h3>零宽间隔模式</h3>
+        <p>
+            可视为普通模式，会在每两个字符之间插♂入一个 零宽间隔符 (U+200B)<br/>
+            处理之后文本看上去没有变化，实际上每个字都被间隔开了，可以避开一般的关键词检测<br/>
+        </p>
+        <h3>每行双重反转</h3>
+        <p>
+            可视为一种增强模式，会将每行文字反转，然后在每行开头加上一个 强制从右至左符 (U+202E）可以避开更多的关键词检测<br/>
+            缺陷是当一行文本（即不含换行符）以多行形式显示时，这几行的显示顺序会混乱<br/>
+        </p>
+        <h3>每两字双重反转</h3>
+        <p>
             另一种增强模式。多行显示时，仍然有概率顺序错乱的问题，这里不作过多解释
-        &lt;/p&gt;
-        &lt;h3&gt;链接转短链接&lt;/h3&gt;
-        &lt;p&gt;使用is.gd的API，将文本中的http/https链接替换为短链接，以避开对链接的域名检测&lt;/p&gt;
-        &lt;h3&gt;转为竖向排列&lt;/h3&gt;
-        &lt;p&gt;
-            纯“物理”的处理方法，不使用Unicode控制符，仅把文本转为竖向排列，防检测效果较好&lt;br/&gt;
-            但仅兼容中文或其他等宽字符，否则会错位&lt;br/&gt;
-        &lt;/p&gt;
-        &lt;h3&gt;替换英文和数字&lt;/h3&gt;
-        &lt;p&gt;
-            将普通拉丁文字母和阿拉伯数字替换为 MATHEMATICAL 字符集中的字母及数字，以避开对英文单词和一些数字的检测（比如QQ群号...）&lt;br/&gt;
+        </p>
+        <h3>链接转短链接</h3>
+        <p>使用is.gd的API，将文本中的http/https链接替换为短链接，以避开对链接的域名检测</p>
+        <h3>转为竖向排列</h3>
+        <p>
+            纯“物理”的处理方法，不使用Unicode控制符，仅把文本转为竖向排列，防检测效果较好<br/>
+            但仅兼容中文或其他等宽字符，否则会错位<br/>
+        </p>
+        <h3>替换英文和数字</h3>
+        <p>
+            将普通拉丁文字母和阿拉伯数字替换为 MATHEMATICAL 字符集中的字母及数字，以避开对英文单词和一些数字的检测（比如QQ群号…）<br/>
             仅部分字体会替换数字
-        &lt;/p&gt;
-        &lt;h3&gt;兼容 [表情] #话题# 和 @&lt;/h3&gt;
-        &lt;p&gt;适用于酷安&lt;/p&gt;
-        &lt;h3&gt;使用须知 &amp;amp; 免责声明&lt;/h3&gt;
-        &lt;ul style=&quot;list-style-type: disc;&quot;&gt;
-            &lt;li&gt; 用途：防止误屏蔽 / 防爬虫 / 防复制 / 防机器检测&lt;/li&gt;
-            &lt;li&gt; 禁止用于传播不良信息。使用不当造成不良后果概不负责&lt;/li&gt;
-            &lt;li&gt; 无法避开所有的关键词检测，只能避开机器检测&lt;/li&gt;
-            &lt;li&gt; 请低调使用&lt;/li&gt;
-            &lt;li&gt; nhml警告&lt;/li&gt;
+        </p>
+        <h3>兼容 [表情] #话题# 和 @</h3>
+        <p>适用于酷安</p>
+        <h3>使用须知 &amp; 免责声明</h3>
+        <ul style="list-style-type: disc;">
+            <li> 用途：防止误屏蔽 / 防爬虫 / 防复制 / 防机器检测</li>
+            <li> 禁止用于传播不良信息。使用不当造成不良后果概不负责</li>
+            <li> 无法避开所有的关键词检测，只能避开机器检测</li>
+            <li> 请低调使用</li>
+            <li> nhml警告</li>
             (酷安小编本人说过用Unicode控制符发送严重违规消息直接永封不解)
-            &lt;li&gt; 某些模式不能共存&lt;/li&gt;
-            &lt;li&gt; 处理后的文本暂无法直接还原&lt;/li&gt;
-        &lt;/ul&gt;
-    </string>
+            <li> 某些模式不能共存</li>
+            <li> 处理后的文本暂无法直接还原</li>
+        </ul>
+    ]]></string>
     <string name="usage_btn_confirm">确定</string>
     <string-array name="fonts_array">
         <item>𝚖𝚘𝚗𝚘𝚜𝚙𝚊𝚌𝚎</item>
@@ -81,4 +81,37 @@
         <item>𝓫𝓸𝓵𝓭-𝓼𝓬𝓻𝓲𝓹𝓽</item>
         <item>fаkе-ոоrmаӏ</item>
     </string-array>
+
+
+    <string name="about_activity_label">关于</string>
+    <string name="about_content"><![CDATA[
+<h2>WordsAway</h2>
+<div>
+    <p style="line-height: 2; font-size: 1.25em;">
+        WordsAway，一个文本防检测工具，MIT开源<br>
+        作者：NitroFire (酷安@SH_XN)
+    </p>
+    <a href="https://github.com/NitroRCr/Words-away">Github</a>
+</div>
+<div>
+    <h3>简单、有效</h3>
+    <p>一键式处理，能有效避开大部分的关键词检测<br>
+        并且尽量不影响文本的可读性</p>
+</div>
+<div>
+    <h3>适合酷安现状</h3>
+    <p>众所周知，酷安的文本检测十分强大却经常误屏蔽。<br>
+        此工具为酷安而生，适合酷安现状</p>
+</div>
+<div>
+    <h3>更多选项</h3>
+    <p>增强模式、竖向排列、链接转短链接…</p>
+</div>
+<h3>Change Log v0.03</h3>
+<p>
+    增强 兼容性<br>
+    修复 bugs<br>
+</p>
+    ]]></string>
+
 </resources>

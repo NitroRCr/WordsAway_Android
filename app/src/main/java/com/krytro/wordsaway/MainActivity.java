@@ -1,11 +1,14 @@
 package com.krytro.wordsaway;
 
+import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Color;
 import android.icu.lang.UCharacter;
+import android.net.Uri;
 import android.os.Bundle;
 import android.service.autofill.RegexValidator;
 import android.text.Html;
@@ -187,10 +190,11 @@ public class MainActivity extends AppCompatActivity {
                 showUsageDialog();
                 break;
             case R.id.menu_item_website:
-
+                openUrl("https://wordsaway.texice.xyz");
                 break;
             case R.id.menu_item_about:
-
+                Intent intent_about = new Intent(this, AboutActivity.class);
+                startActivity(intent_about);
                 break;
         }
         return true;
@@ -200,7 +204,20 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog.Builder builder = new AlertDialog.Builder(this);
         builder.setTitle(R.string.usage_title);
         builder.setMessage(Html.fromHtml(getString(R.string.usage_content)));
-        builder.setPositiveButton(R.string.usage_btn_confirm, (dialogInterface, i) -> dialogInterface.dismiss());
+        builder.setPositiveButton(R.string.usage_btn_confirm, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.dismiss();
+            }
+        });
         builder.create().show();
+    }
+
+    private void openUrl(String urlText) {
+        Uri uri = Uri.parse(urlText);
+        Intent intent_url = new Intent();
+        intent_url.setAction("android.intent.action.VIEW");
+        intent_url.setData(uri);
+        startActivity(intent_url);
     }
 }

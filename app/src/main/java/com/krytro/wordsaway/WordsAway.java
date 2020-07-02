@@ -1,6 +1,5 @@
 package com.krytro.wordsaway;
 
-import android.os.Build;
 import java.util.*;
 
 public class WordsAway {
@@ -59,11 +58,12 @@ public class WordsAway {
     }
 
     public List<String> stringListed(String text, boolean marks, String beforeMark, String afterMark) {
-        List<String> list = new ArrayList<String>();
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            text.codePoints().forEach((code) -> {
-                list.add(String.valueOf(Character.toChars(code)));
-            });
+        List<String> list = new ArrayList<>();
+        final int length = text.length();
+        for (int offset = 0; offset < length;) {
+            final int codepoint = text.codePointAt(offset);
+            list.add(String.valueOf(Character.toChars(codepoint)));
+            offset += Character.charCount(codepoint);
         }
         List<String> result = new ArrayList<>();
         if (marks) {
