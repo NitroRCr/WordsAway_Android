@@ -1,19 +1,13 @@
 package com.krytro.wordsaway;
 
-import android.app.Activity;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.icu.lang.UCharacter;
 import android.net.Uri;
 import android.os.Bundle;
-import android.service.autofill.RegexValidator;
 import android.text.Html;
-import android.text.method.LinkMovementMethod;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -41,13 +35,14 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox_zeroWidthSpace;
     private CheckBox checkBox_rowsReverse;
     private CheckBox checkBox_wordsReverse;
+    private CheckBox checkBox_shortenUrl;
     private CheckBox checkBox_verticalText;
     private CheckBox checkBox_lettersFont;
     private TextView textView_result;
     private Spinner spinner_fonts;
 
-    LinearLayout linearLayout_verticalText_options;
-    LinearLayout linearLayout_fontSelect;
+    private LinearLayout linearLayout_verticalText_options;
+    private LinearLayout linearLayout_fontSelect;
 
     private ClipboardManager cm;
 
@@ -72,6 +67,7 @@ public class MainActivity extends AppCompatActivity {
         checkBox_zeroWidthSpace = findViewById(R.id.checkBox_zeroWidthSpace);
         checkBox_rowsReverse = findViewById(R.id.checkBox_rowsReverse);
         checkBox_wordsReverse = findViewById(R.id.checkBox_wordsReverse);
+        checkBox_shortenUrl = findViewById(R.id.checkBox_shortenUrl);
         checkBox_verticalText = findViewById(R.id.checkBox_verticalText);
         checkBox_lettersFont = findViewById(R.id.checkBox_lettersFont);
         textView_result = findViewById(R.id.textView_result);
@@ -123,13 +119,25 @@ public class MainActivity extends AppCompatActivity {
             text = wa.font(text, fontNames[spinner_fonts.getSelectedItemPosition()]);
         }
         text = text.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
-        textView_result.setText(text);
-        latestResult = text;
+        if (checkBox_shortenUrl.isChecked()) {
+            
+        } else {
+            textView_result.setText(text);
+            latestResult = text;
+        }
     }
 
     public void onCheckBoxClick(View view) {
         boolean isChecked = ((CheckBox)view).isChecked();
         switch (view.getId()) {
+            case R.id.checkBox_missUrl:
+                if (isChecked) {
+                    checkBox_shortenUrl.setEnabled(true);
+                } else {
+                    checkBox_shortenUrl.setChecked(false);
+                    checkBox_shortenUrl.setEnabled(false);
+                }
+                break;
             case R.id.checkBox_wordsReverse:
                 if (isChecked) {
                     checkBox_rowsReverse.setChecked(false);

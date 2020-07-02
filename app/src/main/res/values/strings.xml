@@ -12,6 +12,7 @@
     <string name="checkbox_zeroWidthSpace">零宽间隔（普通）</string>
     <string name="checkbox_rowsReverse">每行双重反转（增强）</string>
     <string name="checkbox_wordsReverse">每两字双重反转（增强）</string>
+    <string name="checkbox_shortenUrl">链接转短链接（API）</string>
     <string name="checkbox_verticalText">转为竖向排列（物理）</string>
     <string name="checkbox_lettersFont">替换英文和数字</string>
     <string name="button_processText">处理</string>

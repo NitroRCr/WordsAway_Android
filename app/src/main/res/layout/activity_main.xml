@@ -113,6 +113,12 @@
                 android:text="@string/checkbox_rowsReverse" />
 
             <CheckBox
+                android:id="@+id/checkBox_shortenUrl"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/checkbox_shortenUrl" />
+
+            <CheckBox
                 android:id="@+id/checkBox_verticalText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
