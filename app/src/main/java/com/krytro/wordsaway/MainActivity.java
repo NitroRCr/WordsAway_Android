@@ -13,6 +13,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
 import android.widget.LinearLayout;
@@ -22,6 +23,21 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.UnsupportedEncodingException;
+import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
+import java.net.ProtocolException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.function.Function;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -40,6 +56,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox_lettersFont;
     private TextView textView_result;
     private Spinner spinner_fonts;
+    private Button button_processText;
 
     private LinearLayout linearLayout_verticalText_options;
     private LinearLayout linearLayout_fontSelect;
@@ -71,6 +88,7 @@ public class MainActivity extends AppCompatActivity {
         checkBox_verticalText = findViewById(R.id.checkBox_verticalText);
         checkBox_lettersFont = findViewById(R.id.checkBox_lettersFont);
         textView_result = findViewById(R.id.textView_result);
+        button_processText = findViewById(R.id.button_processText);
 
         linearLayout_verticalText_options = findViewById(R.id.linearLayout_verticalText_options);
         linearLayout_fontSelect = findViewById(R.id.linearLayout_fontSelect);
@@ -119,12 +137,71 @@ public class MainActivity extends AppCompatActivity {
             text = wa.font(text, fontNames[spinner_fonts.getSelectedItemPosition()]);
         }
         text = text.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
+
         if (checkBox_shortenUrl.isChecked()) {
-            
+            String[] urls = regFindG(text, "(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?)");
+            setResult("短链接请求中...");
+            button_processText.setEnabled(false);
+            for (String originUrl : urls) {
+                String requestUrl;
+                try {
+                    requestUrl = URLDecoder.decode(originUrl, "UTF-8");
+                } catch (UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    continue;
+                }
+                String shortenUrl = httpGet("https://is.gd/create.php?url=" + requestUrl);
+                text = text.replaceAll(originUrl, shortenUrl);
+            }
+            setResult(text);
+            button_processText.setEnabled(true);
         } else {
-            textView_result.setText(text);
-            latestResult = text;
+            setResult(text);
         }
+    }
+
+    private void setResult(String text) {
+        textView_result.setText(text);
+        latestResult = text;
+    }
+
+
+    public static String httpGet(String strUrlPath){
+        String strResult = "";
+        try {
+            URL url = new URL(strUrlPath);
+            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+            conn.setRequestMethod("GET");
+            conn.setUseCaches(false);
+            conn.setConnectTimeout(5000);
+            conn.setReadTimeout(5000);
+            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
+            StringBuffer buffer = new StringBuffer();
+            String line = "";
+            while ((line = in.readLine()) != null){
+                buffer.append(line);
+            }
+            strResult = buffer.toString();
+        } catch (MalformedURLException e) {
+            e.printStackTrace();
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        } catch (ProtocolException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return strResult;
+    }
+
+    private String[] regFindG(String originalText,String regEx ) {
+        List<String> result = new ArrayList<>();
+        Pattern pat = Pattern.compile(regEx);
+        Matcher mat = pat.matcher(originalText);
+        while (mat.find()) {
+            result.add(mat.group(1));
+        }
+        return (result.toArray(new String[0]));
     }
 
     public void onCheckBoxClick(View view) {
@@ -228,4 +305,5 @@ public class MainActivity extends AppCompatActivity {
         intent_url.setData(uri);
         startActivity(intent_url);
     }
+
 }
