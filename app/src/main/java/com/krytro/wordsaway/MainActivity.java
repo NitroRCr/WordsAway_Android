@@ -7,6 +7,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -24,24 +25,29 @@ import android.widget.Toast;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
-import java.net.ProtocolException;
 import java.net.URL;
 import java.net.URLDecoder;
+import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 
+
 public class MainActivity extends AppCompatActivity {
     WordsAway wa = new WordsAway();
+
+    private Menu main_menu;
 
     private EditText editText_input;
     private EditText editText_maxCol;
@@ -69,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
             "sans-serif-bold", "sans-serif-italic", "sans-serif-bold-italic", "bold", "italic",
             "bold-italic", "bold-script", "fake-normal"};
 
-    private Menu main_menu;
+    private String currText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -103,25 +109,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void processText(View view) {
-        String text = editText_input.getText().toString();
+        currText = editText_input.getText().toString();
 
         String marked = "\ue0dc$1\ue0dd";
         if (checkBox_missUrl.isChecked()) {
-            text = text.replaceAll("(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w-.\\/?%&=]*)?)", marked);
+            currText = currText.replaceAll("(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w-.\\/?%&=]*)?)", marked);
         }
         if (checkBox_coolapkMode.isChecked()) {
-            text = text.replaceAll("(#[\\w\\u4e00-\\u9fa5\\u3040-\\u30ff]{1,20}?#)", marked)
+            currText = currText.replaceAll("(#[\\w\\u4e00-\\u9fa5\\u3040-\\u30ff]{1,20}?#)", marked)
                     .replaceAll("(@[\\w\\u4e00-\\u9fa5\\u3040-\\u30ff]{1,15} ?)", marked)
                     .replaceAll("(\\[[\\w\\u4e00-\\u9fa5]{1,10}?\\])", marked);
         }
         if (checkBox_rowsReverse.isChecked()) {
-            text = wa.rowsReverse(text, true);
+            currText = wa.rowsReverse(currText, true);
         }
         if (checkBox_wordsReverse.isChecked()) {
-            text = wa.wordsReverse(text, true);
+            currText = wa.wordsReverse(currText, true);
         }
         if (checkBox_zeroWidthSpace.isChecked()) {
-            text = wa.mixin(text, "\u200b", true);
+            currText = wa.mixin(currText, "\u200b", true);
         }
         if (checkBox_verticalText.isChecked()) {
             int maxCol = Integer.parseInt(editText_maxCol.getText().toString());
@@ -130,33 +136,24 @@ public class MainActivity extends AppCompatActivity {
                 toast("最大列数不能为0");
                 return;
             }
-            text = wa.verticalText(text, maxCol, minRow);
+            currText = wa.verticalText(currText, maxCol, minRow);
         }
         spinner_fonts.getSelectedItemId();
         if (checkBox_lettersFont.isChecked()) {
-            text = wa.font(text, fontNames[spinner_fonts.getSelectedItemPosition()]);
+            currText = wa.font(currText, fontNames[spinner_fonts.getSelectedItemPosition()]);
         }
-        text = text.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
+        currText = currText.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
 
         if (checkBox_shortenUrl.isChecked()) {
-            String[] urls = regFindG(text, "(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?)");
+            String[] urls = regFindG(currText, "(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?)");
             setResult("短链接请求中...");
             button_processText.setEnabled(false);
-            for (String originUrl : urls) {
-                String requestUrl;
-                try {
-                    requestUrl = URLDecoder.decode(originUrl, "UTF-8");
-                } catch (UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    continue;
-                }
-                String shortenUrl = httpGet("https://is.gd/create.php?url=" + requestUrl);
-                text = text.replaceAll(originUrl, shortenUrl);
+            for (int i = 0; i < urls.length; i++) {
+                String originUrl = urls[i];
+                getShortenUrl(originUrl, i == urls.length - 1);
             }
-            setResult(text);
-            button_processText.setEnabled(true);
         } else {
-            setResult(text);
+            setResult(currText);
         }
     }
 
@@ -165,34 +162,55 @@ public class MainActivity extends AppCompatActivity {
         latestResult = text;
     }
 
-
-    public static String httpGet(String strUrlPath){
-        String strResult = "";
-        try {
-            URL url = new URL(strUrlPath);
-            HttpURLConnection conn = (HttpURLConnection)url.openConnection();
-            conn.setRequestMethod("GET");
-            conn.setUseCaches(false);
-            conn.setConnectTimeout(5000);
-            conn.setReadTimeout(5000);
-            BufferedReader in = new BufferedReader(new InputStreamReader(conn.getInputStream(), "utf-8"));
-            StringBuffer buffer = new StringBuffer();
-            String line = "";
-            while ((line = in.readLine()) != null){
-                buffer.append(line);
+    private void getShortenUrl(String originUrl, boolean isLast) {
+        new Thread(() -> {
+            HttpURLConnection connection = null;
+            BufferedReader reader = null;
+            try {
+                String urlText = "https://is.gd/create.php?format=json&url="
+                        + URLEncoder.encode(originUrl, "UTF-8");
+                URL url = new URL(urlText);
+                connection = (HttpURLConnection) url.openConnection();
+                connection.setRequestMethod("GET");
+                connection.setConnectTimeout(5000);
+                connection.setReadTimeout(5000);
+                InputStream in = connection.getInputStream();
+                reader = new BufferedReader(new InputStreamReader(in));
+                StringBuilder result = new StringBuilder();
+                String line;
+                while ((line = reader.readLine()) != null) {
+                    result.append(line);
+                }
+                JSONObject json = new JSONObject(result.toString());
+                currText = currText.replaceAll(originUrl, json.getString("shorturl"));
+                Looper.prepare();
+                setResult(currText);
+                button_processText.setEnabled(true);
+                Looper.loop();
+            } catch (IOException | JSONException e) {
+                e.printStackTrace();
+                Looper.prepare();
+                toast("短链接请求失败");
+                if (isLast) {
+                    setResult(currText);
+                    button_processText.setEnabled(true);
+                }
+                Looper.loop();
+            } finally {
+                if (reader != null) {
+                    try {
+                        reader.close();
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                if (connection != null) {//关闭连接
+                    connection.disconnect();
+                }
             }
-            strResult = buffer.toString();
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
-        } catch (UnsupportedEncodingException e) {
-            e.printStackTrace();
-        } catch (ProtocolException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return strResult;
+        }).start();
     }
+
 
     private String[] regFindG(String originalText,String regEx ) {
         List<String> result = new ArrayList<>();
