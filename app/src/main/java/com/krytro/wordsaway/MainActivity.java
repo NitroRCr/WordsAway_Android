@@ -7,7 +7,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Looper;
+import android.os.Handler;
+import android.os.Message;
 import android.text.Html;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -34,8 +35,8 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.io.UnsupportedEncodingException;
 import java.net.HttpURLConnection;
+import java.net.MalformedURLException;
 import java.net.URL;
-import java.net.URLDecoder;
 import java.net.URLEncoder;
 import java.util.ArrayList;
 import java.util.List;
@@ -76,6 +77,60 @@ public class MainActivity extends AppCompatActivity {
             "bold-italic", "bold-script", "fake-normal"};
 
     private String currText;
+
+    final static int SET_SHORTEN_URL = 0;
+    final static int SHORTEN_URL_FAIL_TODO = 1;
+
+
+    private int urlNum;
+    private int urlDone;
+    private String[] originUrls;
+
+    class mHandler extends Handler {
+
+        @Override
+        public void handleMessage(Message message) {
+            switch (message.what) {
+                case MainActivity.SET_SHORTEN_URL:
+                    setShortenUrl((String)message.obj, originUrls[message.arg1]);
+                    break;
+                case MainActivity.SHORTEN_URL_FAIL_TODO:
+                    shortenUrlFailTodo();
+                    break;
+            }
+        }
+
+        private void setShortenUrl(String data, String originUrl) {
+            JSONObject json = null;
+            try {
+                json = new JSONObject(data);
+                currText = currText.replaceAll(originUrl, json.getString("shorturl"));
+            } catch (JSONException e) {
+                e.printStackTrace();
+                shortenUrlFailTodo();
+            }
+            setResult(currText);
+            button_processText.setEnabled(true);
+            urlCount();
+        }
+
+        private void shortenUrlFailTodo() {
+            toast("短链接请求失败");
+            urlCount();
+        }
+
+        private void urlCount() {
+            if(++urlDone == urlNum) {
+                setResult(currText);
+                button_processText.setEnabled(true);
+                urlNum = 0;
+                urlDone = 0;
+                originUrls = new String[]{};
+            }
+        }
+    }
+
+    private Handler mhandler = new mHandler();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -150,7 +205,29 @@ public class MainActivity extends AppCompatActivity {
             button_processText.setEnabled(false);
             for (int i = 0; i < urls.length; i++) {
                 String originUrl = urls[i];
-                getShortenUrl(originUrl, i == urls.length - 1);
+                originUrls = urls;
+                urlNum = urls.length;
+                urlDone = 0;
+                try {
+                    String urlText = "https://is.gd/create.php?format=json&url="
+                            + URLEncoder.encode(originUrl, "UTF-8");
+                    URL url = new URL(urlText);
+
+                    Message resolve = new Message();
+                    resolve.what = SET_SHORTEN_URL;
+                    resolve.arg1 = i;
+
+                    Message reject = new Message();
+                    reject.what = SHORTEN_URL_FAIL_TODO;
+                    reject.arg1 = i;
+                    httpGet(url, resolve, reject);
+                } catch (MalformedURLException | UnsupportedEncodingException e) {
+                    e.printStackTrace();
+                    Message msg = new Message();
+                    msg.what = SHORTEN_URL_FAIL_TODO;
+                    msg.arg1 = i;
+                    mhandler.sendMessage(msg);
+                }
             }
         } else {
             setResult(currText);
@@ -162,14 +239,11 @@ public class MainActivity extends AppCompatActivity {
         latestResult = text;
     }
 
-    private void getShortenUrl(String originUrl, boolean isLast) {
+    private void httpGet(URL url, Message resolve, Message reject) {
         new Thread(() -> {
             HttpURLConnection connection = null;
             BufferedReader reader = null;
             try {
-                String urlText = "https://is.gd/create.php?format=json&url="
-                        + URLEncoder.encode(originUrl, "UTF-8");
-                URL url = new URL(urlText);
                 connection = (HttpURLConnection) url.openConnection();
                 connection.setRequestMethod("GET");
                 connection.setConnectTimeout(5000);
@@ -181,21 +255,13 @@ public class MainActivity extends AppCompatActivity {
                 while ((line = reader.readLine()) != null) {
                     result.append(line);
                 }
-                JSONObject json = new JSONObject(result.toString());
-                currText = currText.replaceAll(originUrl, json.getString("shorturl"));
-                Looper.prepare();
-                setResult(currText);
-                button_processText.setEnabled(true);
-                Looper.loop();
-            } catch (IOException | JSONException e) {
+
+                resolve.obj = result.toString();
+                mhandler.sendMessage(resolve);
+            } catch (IOException e) {
                 e.printStackTrace();
-                Looper.prepare();
-                toast("短链接请求失败");
-                if (isLast) {
-                    setResult(currText);
-                    button_processText.setEnabled(true);
-                }
-                Looper.loop();
+                reject.obj = e;
+                mhandler.sendMessage(reject);
             } finally {
                 if (reader != null) {
                     try {
@@ -204,7 +270,7 @@ public class MainActivity extends AppCompatActivity {
                         e.printStackTrace();
                     }
                 }
-                if (connection != null) {//关闭连接
+                if (connection != null) {
                     connection.disconnect();
                 }
             }
@@ -323,5 +389,6 @@ public class MainActivity extends AppCompatActivity {
         intent_url.setData(uri);
         startActivity(intent_url);
     }
+
 
 }
