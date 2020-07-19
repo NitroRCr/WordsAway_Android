@@ -15,11 +15,12 @@
 
         <Button
             android:id="@+id/button_processText"
+            style="@android:style/Widget.Material.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
             android:layout_marginEnd="16dp"
-            android:background="@drawable/button_background"
+            android:backgroundTint="@color/colorPrimary"
             android:onClick="processText"
             android:text="@string/button_processText"
             android:textColor="#FFFFFF"
@@ -53,11 +54,12 @@
 
         <Button
             android:id="@+id/button_copyResult"
+            style="@android:style/Widget.Material.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
             android:layout_marginTop="16dp"
-            android:background="@drawable/button_background"
+            android:backgroundTint="@color/colorPrimary"
             android:onClick="copyResult"
             android:text="@string/button_copyResult"
             android:textColor="#FFFFFF"

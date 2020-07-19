@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox_verticalText;
     private CheckBox checkBox_lettersFont;
     private TextView textView_result;
-    private Spinner spinner_fonts;
+    private Spinner spinner_fonts = findViewById(R.id.spinner_font);
     private Button button_processText;
 
     private LinearLayout linearLayout_verticalText_options;
@@ -92,6 +92,7 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             switch (message.what) {
                 case MainActivity.SET_SHORTEN_URL:
+                    System.out.println(message.arg1);
                     setShortenUrl((String)message.obj, originUrls[message.arg1]);
                     break;
                 case MainActivity.SHORTEN_URL_FAIL_TODO:
@@ -105,12 +106,11 @@ public class MainActivity extends AppCompatActivity {
             try {
                 json = new JSONObject(data);
                 currText = currText.replaceAll(originUrl, json.getString("shorturl"));
+                System.out.println(currText);
             } catch (JSONException e) {
                 e.printStackTrace();
                 shortenUrlFailTodo();
             }
-            setResult(currText);
-            button_processText.setEnabled(true);
             urlCount();
         }
 
@@ -156,7 +156,6 @@ public class MainActivity extends AppCompatActivity {
 
         cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
-        spinner_fonts = findViewById(R.id.spinner_font);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.fonts_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -199,35 +198,42 @@ public class MainActivity extends AppCompatActivity {
         }
         currText = currText.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
 
+        System.out.println(currText);
+
         if (checkBox_shortenUrl.isChecked()) {
             String[] urls = regFindG(currText, "(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?)");
-            setResult("短链接请求中...");
-            button_processText.setEnabled(false);
-            for (int i = 0; i < urls.length; i++) {
-                String originUrl = urls[i];
-                originUrls = urls;
-                urlNum = urls.length;
-                urlDone = 0;
-                try {
-                    String urlText = "https://is.gd/create.php?format=json&url="
-                            + URLEncoder.encode(originUrl, "UTF-8");
-                    URL url = new URL(urlText);
+            if (urls.length > 0) {
+                setResult("短链接请求中...");
+                button_processText.setEnabled(false);
+                for (int i = 0; i < urls.length; i++) {
+                    String originUrl = urls[i];
+                    originUrls = urls;
+                    urlNum = urls.length;
+                    urlDone = 0;
+                    System.out.println(urls);
+                    try {
+                        String urlText = "https://is.gd/create.php?format=json&url="
+                                + URLEncoder.encode(originUrl, "UTF-8");
+                        URL url = new URL(urlText);
 
-                    Message resolve = new Message();
-                    resolve.what = SET_SHORTEN_URL;
-                    resolve.arg1 = i;
+                        Message resolve = new Message();
+                        resolve.what = SET_SHORTEN_URL;
+                        resolve.arg1 = i;
 
-                    Message reject = new Message();
-                    reject.what = SHORTEN_URL_FAIL_TODO;
-                    reject.arg1 = i;
-                    httpGet(url, resolve, reject);
-                } catch (MalformedURLException | UnsupportedEncodingException e) {
-                    e.printStackTrace();
-                    Message msg = new Message();
-                    msg.what = SHORTEN_URL_FAIL_TODO;
-                    msg.arg1 = i;
-                    mhandler.sendMessage(msg);
+                        Message reject = new Message();
+                        reject.what = SHORTEN_URL_FAIL_TODO;
+                        reject.arg1 = i;
+                        httpGet(url, resolve, reject);
+                    } catch (MalformedURLException | UnsupportedEncodingException e) {
+                        e.printStackTrace();
+                        Message msg = new Message();
+                        msg.what = SHORTEN_URL_FAIL_TODO;
+                        msg.arg1 = i;
+                        mhandler.sendMessage(msg);
+                    }
                 }
+            } else {
+                setResult(currText);
             }
         } else {
             setResult(currText);
