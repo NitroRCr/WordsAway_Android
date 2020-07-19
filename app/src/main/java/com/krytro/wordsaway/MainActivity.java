@@ -92,7 +92,6 @@ public class MainActivity extends AppCompatActivity {
         public void handleMessage(Message message) {
             switch (message.what) {
                 case MainActivity.SET_SHORTEN_URL:
-                    System.out.println(message.arg1);
                     setShortenUrl((String)message.obj, originUrls[message.arg1]);
                     break;
                 case MainActivity.SHORTEN_URL_FAIL_TODO:
@@ -106,7 +105,6 @@ public class MainActivity extends AppCompatActivity {
             try {
                 json = new JSONObject(data);
                 currText = currText.replaceAll(originUrl, json.getString("shorturl"));
-                System.out.println(currText);
             } catch (JSONException e) {
                 e.printStackTrace();
                 shortenUrlFailTodo();
@@ -165,10 +163,11 @@ public class MainActivity extends AppCompatActivity {
 
     public void processText(View view) {
         currText = editText_input.getText().toString();
+        String urlRegex = "(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w-.\\/?%&=+]*)?)";
 
         String marked = "\ue0dc$1\ue0dd";
         if (checkBox_missUrl.isChecked()) {
-            currText = currText.replaceAll("(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w-.\\/?%&=]*)?)", marked);
+            currText = currText.replaceAll(urlRegex, marked);
         }
         if (checkBox_coolapkMode.isChecked()) {
             currText = currText.replaceAll("(#[\\w\\u4e00-\\u9fa5\\u3040-\\u30ff]{1,20}?#)", marked)
@@ -199,10 +198,8 @@ public class MainActivity extends AppCompatActivity {
         }
         currText = currText.replaceAll("\\ue0dc([^\\s]+? ?)\\ue0dd", "$1");
 
-        System.out.println(currText);
-
         if (checkBox_shortenUrl.isChecked()) {
-            String[] urls = regFindG(currText, "(http(s)?:\\/\\/([\\w-]+\\.)+[\\w-]+(\\/[\\w- .\\/?%&=]*)?)");
+            String[] urls = regFindG(currText, urlRegex);
             if (urls.length > 0) {
                 setResult("短链接请求中...");
                 button_processText.setEnabled(false);
@@ -211,7 +208,6 @@ public class MainActivity extends AppCompatActivity {
                     originUrls = urls;
                     urlNum = urls.length;
                     urlDone = 0;
-                    System.out.println(urls);
                     try {
                         String urlText = "https://is.gd/create.php?format=json&url="
                                 + URLEncoder.encode(originUrl, "UTF-8");
