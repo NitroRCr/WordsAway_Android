@@ -62,7 +62,7 @@ public class MainActivity extends AppCompatActivity {
     private CheckBox checkBox_verticalText;
     private CheckBox checkBox_lettersFont;
     private TextView textView_result;
-    private Spinner spinner_fonts = findViewById(R.id.spinner_font);
+    private Spinner spinner_fonts;
     private Button button_processText;
 
     private LinearLayout linearLayout_verticalText_options;
@@ -156,6 +156,7 @@ public class MainActivity extends AppCompatActivity {
 
         cm = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
 
+        spinner_fonts = findViewById(R.id.spinner_font);
         ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(this,
                 R.array.fonts_array, android.R.layout.simple_spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);

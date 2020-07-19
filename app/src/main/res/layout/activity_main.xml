@@ -15,7 +15,7 @@
 
         <Button
             android:id="@+id/button_processText"
-            style="@android:style/Widget.Material.Button"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="16dp"
@@ -54,7 +54,7 @@
 
         <Button
             android:id="@+id/button_copyResult"
-            style="@android:style/Widget.Material.Button"
+            style="@style/Widget.AppCompat.Button.Colored"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginStart="16dp"
