@@ -104,7 +104,7 @@ public class MainActivity extends AppCompatActivity {
             JSONObject json = null;
             try {
                 json = new JSONObject(data);
-                currText = currText.replaceAll(originUrl, json.getString("shorturl"));
+                currText = currText.replace(originUrl, json.getString("shorturl"));
             } catch (JSONException e) {
                 e.printStackTrace();
                 shortenUrlFailTodo();
