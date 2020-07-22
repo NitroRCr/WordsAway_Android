@@ -392,6 +392,4 @@ public class MainActivity extends AppCompatActivity {
         intent_url.setData(uri);
         startActivity(intent_url);
     }
-
-
 }
